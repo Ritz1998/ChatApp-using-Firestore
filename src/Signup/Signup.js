@@ -8,18 +8,21 @@ const Signup =({navigation})=>{
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [confPassword, setConfPassword] = useState('')
+    const [name, setName] = useState("")
+
 
 
     const registerUser=()=>{
         const userId=uuid.v4()
 
-        if(email && password && confPassword){
+        if(email && password && confPassword && name){
             if(password == confPassword){
 
                 firestore().collection("users").doc(userId).set({
                     email:email,
                     password:password,
-                    userId:userId
+                    userId:userId,
+                    name:name
                 }).then(res=>{
                     console.log("RESPONSE REGISTERUSER",res)
 
@@ -104,6 +107,19 @@ const Signup =({navigation})=>{
             {/* Signup Form */}
             <View style={styles.form}>
               <Text style={styles.formTitle}>Signup</Text>
+
+              <View style={styles.inputBox}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your name"
+                  placeholderTextColor="#333"
+                  keyboardType="name-phone-pad"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  value={name}
+                  onChangeText={(text)=>setName(text)}
+                />
+              </View>
   
               <View style={styles.inputBox}>
                 <TextInput

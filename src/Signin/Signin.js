@@ -1,14 +1,52 @@
 import React, { useState } from "react";
-import {ImageBackground, SafeAreaView, StyleSheet, Text, View,TouchableOpacity,TextInput}  from 'react-native';
+import {ImageBackground, SafeAreaView, StyleSheet, Text, View,TouchableOpacity,TextInput, Alert}  from 'react-native';
 import styles from "./styles";
+import firestore from "@react-native-firebase/firestore"
+import Loader from "../Loader/Loader";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 
 
 const Signin =({navigation})=>{
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [name, setName] = useState("")
+  const [loader, setLoader] = useState(false)
 
     
+  const onLogin=()=>{
+    setLoader(true)
+    console.log("EMAIL",email)
+    firestore().collection("users")
+            .where("email","==",email).get().then((res)=>{
+              if(res.docs[0].data()){
 
+                console.log("RESPOSNSE LOGIN",res.docs[0].data())
+                proceedToNext(
+                  res.docs[0].data().email,
+                  res.docs[0].data().userId,
+                  res.docs[0].data().name
+
+                  )
+                  Alert.alert("User Logged in Successfully!")
+                  navigation.navigate("home")
+                setLoader(false)
+              }else{
+                Alert.alert("User not found!")
+                setLoader(false)
+              }
+    }).catch((err)=>{
+      console.log("ERROR ON LOGIN",err)
+      setLoader(false)
+    })
+  }
+
+  const proceedToNext =async  (email,userId,name)=>{
+    AsyncStorage.setItem("email",email)
+    AsyncStorage.setItem("Userid",userId)
+    AsyncStorage.setItem("name",name)
+
+  }
     return(
         <ImageBackground source={require('./chatAppBackground.jpg')} style={styles.backgroundImage}>
         <View style={styles.container}>
@@ -73,6 +111,20 @@ const Signin =({navigation})=>{
             {/* Signup Form */}
             <View style={styles.form}>
               <Text style={styles.formTitle}>SignIn</Text>
+
+
+              <View style={styles.inputBox}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter your name"
+                  placeholderTextColor="#333"
+                  keyboardType="name-phone-pad"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                  value={name}
+                  onChangeText={(text)=>setName(text)}
+                />
+              </View>
   
               <View style={styles.inputBox}>
                 <TextInput
@@ -82,6 +134,8 @@ const Signin =({navigation})=>{
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoCorrect={false}
+                  value={email}
+                  onChangeText={(text)=>setEmail(text)}
                 />
               </View>
   
@@ -90,14 +144,17 @@ const Signin =({navigation})=>{
                   style={styles.input}
                   placeholder="Create password"
                   placeholderTextColor="#333"
+                  value={password}
+                  onChangeText={(text)=>setPassword(text)}
+
                   secureTextEntry
                 />
                
               </View>
   
             
-              <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Signup Now</Text>
+              <TouchableOpacity style={styles.button} onPress={()=>onLogin()}>
+                <Text style={styles.buttonText}>Signin Now</Text>
               </TouchableOpacity>
   
               <View style={styles.loginSignup}>
@@ -109,6 +166,7 @@ const Signin =({navigation})=>{
             </View>
           </View>
         </View>
+       {loader? <Loader/>:""}
       </ImageBackground>
     )
 }

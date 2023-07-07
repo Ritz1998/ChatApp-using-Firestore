@@ -5,7 +5,8 @@
  * @format
  */
 
-import { NavigationContainer } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
 import {
@@ -17,24 +18,34 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
+import Chat from './src/ChatScreen/Chat';
+import Home from './src/Home/Home';
 import Signin from './src/Signin/Signin';
 import Signup from './src/Signup/Signup';
+import SplashScreen from './src/SplashScreen/SplashScreen';
 
 
 
 function App(){
+
+  
  const Stack=createStackNavigator()
+
+
   return (
     <NavigationContainer>
 
      <Stack.Navigator
      screenOptions={({ route, navigation }) => ({
-      headerShown: false
-     
+       
     })}
      >
-      <Stack.Screen name="singup" component={Signup}    />
-      <Stack.Screen name="signin" component={Signin} />
+      <Stack.Screen name="splashscreen" component={SplashScreen}    />
+      
+      <Stack.Screen name="singup" component={Signup}  headerShown={false}    />
+      <Stack.Screen name="signin" component={Signin}  headerShown={false} />
+      <Stack.Screen name="home" component={Home}  headerShown={false} />
+      <Stack.Screen name="chat" component={Chat} headerShown={true}/>
       
     </Stack.Navigator>
     </NavigationContainer>
