@@ -37,6 +37,7 @@ function App(){
 
      <Stack.Navigator
      screenOptions={({ route, navigation }) => ({
+      headerShown:false
        
     })}
      >
@@ -44,7 +45,7 @@ function App(){
       
       <Stack.Screen name="singup" component={Signup}  headerShown={false}    />
       <Stack.Screen name="signin" component={Signin}  headerShown={false} />
-      <Stack.Screen name="home" component={Home}  headerShown={false} />
+      <Stack.Screen name="home" component={Home} headerShown={false}  />
       <Stack.Screen name="chat" component={Chat} headerShown={true}/>
       
     </Stack.Navigator>

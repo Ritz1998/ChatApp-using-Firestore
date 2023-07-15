@@ -12,15 +12,18 @@ const Users = () => {
 
 
     const [users, setUsers] = useState([])
+    const [id,setId]=useState("")
 
 
     useEffect(() => {
         getUser()
 
     }, [])
-
-    const getUser = () => {
-        const email = AsyncStorage.getItem("email")
+    
+    const getUser = async () => {
+        const email = await AsyncStorage.getItem("email")
+        const ID= await AsyncStorage.getItem("Userid")
+        setId(ID)
 
         let tempArr=[]
 
@@ -33,7 +36,7 @@ const Users = () => {
 
             }
             setUsers(tempArr)
-            console.log("response get", res.docs)
+            console.log("response get", res)
         })
 
     }

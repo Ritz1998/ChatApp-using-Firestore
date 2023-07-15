@@ -9,6 +9,7 @@ const SplashScreen =({navigation})=>{
     }, [])
     const checkLogin =async()=>{
         const id=  await AsyncStorage.getItem("Userid")
+        console.log("ID",id)
         if(id!==null){
            navigation.navigate("home")
         }else{
